@@ -1,7 +1,8 @@
 const express = require('express')
+const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID; 
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const MongoClient = require('mongodb').MongoClient;
 require('dotenv').config()
 
 // const d = process.env.DB_PASS;
@@ -37,11 +38,19 @@ client.connect(err => {
         // console.log('from database', items);
       })
     })
+
+    //delete data
+    app.delete('/deleteEvent/:id', (req, res) => {
+      const id = ObjectID(req.params.id);
+      console.log('delete this', id);
+      eventCollection.findOneAndDelete({_id: id})
+      .then(documents => res.send(!!documents.value))
+    })
 });
 
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('volunteer!')
 })
 
 app.listen(port)
